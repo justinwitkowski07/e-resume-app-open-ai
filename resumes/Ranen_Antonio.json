@@ -1,15 +1,15 @@
 {
     "name": "Ranen Antonio",
     "email": "ranen.an06@outlook.com",
-    "phone": "+63 962 420-5365",
+    "phone": "",
     "location": "Imus, Cavite, PH",
     "linkedin": "",
     "website": "",
     "experience": [
       {
-        "company": "Kiggla",
+        "company": "Cargo Express Freight",
         "title": "Senior Full Stack Engineer",
-        "location": "Miami,FL, US",
+        "location": "Irvine, CA, US",
         "start_date": "Oct 2024",
         "end_date": "Present"
       },

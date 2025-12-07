@@ -1,15 +1,15 @@
 {
     "name": "Angelo Cruz",
     "email": "angelo.c05@outlook.com",
-    "phone": "+63 920 442-8785",
-    "location": "4027 Calamba, Calabarzon, Philippines",
+    "phone": "",
+    "location": "Calamba City, Laguna 4028, Philippines",
     "linkedin": "http://www.linkedin.com/in/angelo-cruz-72113239b",
     "website": "",
     "experience": [
       {
         "company": "Kiggla",
-        "title": "Lead FullStack Developer",
-        "location": "Miami,FL, US",
+        "title": "Senior FullStack Developer",
+        "location": "Miami, FL, US",
         "start_date": "Oct 2024",
         "end_date": "Present"
       },
