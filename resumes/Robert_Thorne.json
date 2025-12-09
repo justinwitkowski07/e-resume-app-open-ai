@@ -9,14 +9,14 @@
     {
       "company": "Kiggla",
       "title": "Senior Software QA Engineer",
-      "location": "Miami, FL",
+      "location": "FL, US",
       "start_date": "July 2025",
       "end_date": "Present"
     },
     {
       "company": "M3 Tech",
       "title": "Senior QA Engineer",
-      "location": "Canada",
+      "location": "Montreal, Canada",
       "start_date": "July 2021",
       "end_date": "June 2025"
     },
@@ -44,7 +44,7 @@
   ],
   "education": [
     {
-      "degree": "Bachelor of Arts, International Relations",
+      "degree": "Bachelor of Science in Computer Science",
       "school": "Brigham Young University - Idaho, US ",
       "start_year": "2008",
       "end_year": "2015"

@@ -8,30 +8,30 @@
   
   "experience": [
     {
-      "company": "PuzzleHR - US",
+      "company": "PuzzleHR",
       "title": "Sr. DevOps/SecOps Engineer",
-      "location": "US",
+      "location": "FL, US",
       "start_date": "Oct 2022",
       "end_date": "Present"
     },
     {
-      "company": "CyberJutsu - Vietnam",
+      "company": "CyberJutsu",
       "title": "Cloud Security Engineer / DevSecOps Engineer",
-      "location": "Vietnam",
+      "location": "Hanoi, Vietnam",
       "start_date": "Mar 2019",
       "end_date": "Sep 2022"
     },
     {
-      "company": "Sotatek JSC - Vietnam",
+      "company": "Sotatek JSC",
       "title": "DevOps Engineer / Cloud Engineer",
-      "location": "Vietnam",
+      "location": "Hanoi, Vietnam",
       "start_date": "Sep 2016",
       "end_date": "Feb 2019"
     },
     {
-      "company": "FPT Software - Vietnam",
+      "company": "FPT Software",
       "title": "IT Support / SysAdmin",
-      "location": "Vietnam",
+      "location": " Hanoi, Vietnam",
       "start_date": "Feb 2014",
       "end_date": "Aug 2016"
     }
@@ -41,7 +41,7 @@
     {
       "degree": "Bachelor of Science in Computer Science",
       "school": "Vietnam National University, Hanoi",
-      "start_year": "2013",
+      "start_year": "2009",
       "end_year": "2013"
     }
   ]
