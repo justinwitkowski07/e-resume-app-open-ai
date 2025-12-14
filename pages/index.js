@@ -292,6 +292,8 @@ export default function Home() {
             <option value="modern">Modern Minimalist</option>
             <option value="classic">Professional Two-Column</option>
             <option value="contemporary">Contemporary with Color</option>
+            <option value="compact">Compact Single-Column</option>
+            <option value="elegant">Elegant Single-Column</option>
           </select>
         </div>
 

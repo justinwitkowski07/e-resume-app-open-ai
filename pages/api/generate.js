@@ -11,7 +11,9 @@ const TEMPLATE_OPTIONS = {
   'default': 'Resume.html',
   'modern': 'Resume_Modern.html',
   'classic': 'Resume_Classic.html',
-  'contemporary': 'Resume_Contemporary.html'
+  'contemporary': 'Resume_Contemporary.html',
+  'compact': 'Resume_Compact.html',
+  'elegant': 'Resume_Elegant.html'
 };
 
 // Register Handlebars helpers (idempotent, safe to call multiple times)
