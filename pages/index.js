@@ -100,10 +100,14 @@ const footerStyle = {
 export default function Home() {
   const [profiles, setProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState("default");
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [jd, setJd] = useState("");
   const [disable, setDisable] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewFilename, setPreviewFilename] = useState("");
 
   // Load profiles on mount
   useEffect(() => {
@@ -133,67 +137,114 @@ export default function Home() {
     boxShadow: disable ? "none" : "0 4px 15px rgba(102, 126, 234, 0.4)"
   }), [disable]);
 
-  // Memoize generatePDF function with useCallback
-  const generatePDF = useCallback(async () => {
-    if (disable) return;
-    if (!selectedProfile) return alert("Please select a profile");
-    if (!jd) return alert("Please enter the Completed Resume JSON");
-    if (!company) return alert("Please enter the Company Name");
-    if (!role) return alert("Please enter the Role Name");
+  // Helper function to generate PDF blob
+  const generatePDFBlob = useCallback(async () => {
+    if (!selectedProfile) throw new Error("Please select a profile");
+    if (!jd) throw new Error("Please enter the Completed Resume JSON");
+    if (!company) throw new Error("Please enter the Company Name");
+    if (!role) throw new Error("Please enter the Role Name");
 
+    const genRes = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        profile: selectedProfile,
+        jd: jd,
+        company: company,
+        role: role,
+        template: selectedTemplate
+      })
+    });
+
+    if (!genRes.ok) {
+      const errorText = await genRes.text();
+      console.error('Error response:', errorText);
+      
+      // Try to parse as JSON to get detailed error
+      try {
+        const errorJson = JSON.parse(errorText);
+        throw new Error(errorJson.error || "Failed to generate PDF");
+      } catch (e) {
+        throw new Error(errorText || "Failed to generate PDF");
+      }
+    }
+
+    return await genRes.blob();
+  }, [selectedProfile, jd, company, role, selectedTemplate]);
+
+  // Generate filename helper
+  const getFilename = useCallback(() => {
+    const profileName = selectedProfileData ? selectedProfileData.name : selectedProfile;
+    const profileSanitized = sanitizeFilename(profileName);
+    const companySanitized = sanitizeFilename(company);
+    const roleSanitized = sanitizeFilename(role);
+    return `${profileSanitized}_${companySanitized}_${roleSanitized}.pdf`;
+  }, [selectedProfile, company, role, selectedProfileData]);
+
+  // Preview PDF function
+  const previewPDF = useCallback(async () => {
+    if (disable) return;
     setDisable(true);
 
     try {
-      const genRes = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          profile: selectedProfile,
-          jd: jd,
-          company: company,
-          role: role
-        })
-      });
-
-      if (!genRes.ok) {
-        const errorText = await genRes.text();
-        console.error('Error response:', errorText);
-        
-        // Try to parse as JSON to get detailed error
-        try {
-          const errorJson = JSON.parse(errorText);
-          throw new Error(errorJson.error || "Failed to generate PDF");
-        } catch (e) {
-          throw new Error(errorText || "Failed to generate PDF");
-        }
-      }
-
-      const blob = await genRes.blob();
+      const blob = await generatePDFBlob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
+      const filename = getFilename();
       
-      // Generate filename from profile name, company and role
-      const profileName = selectedProfileData ? selectedProfileData.name : selectedProfile;
-      const profileSanitized = sanitizeFilename(profileName);
-      const companySanitized = sanitizeFilename(company);
-      const roleSanitized = sanitizeFilename(role);
-      const filename = `${profileSanitized}_${companySanitized}_${roleSanitized}.pdf`;
-      
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      alert("✅ Resume generated successfully!");
+      setPreviewUrl(url);
+      setPreviewFilename(filename);
+      setShowPreview(true);
     } catch (error) {
       alert(`❌ Error: ${error.message}`);
     } finally {
       setDisable(false);
     }
-  }, [disable, selectedProfile, jd, company, role, selectedProfileData]);
+  }, [disable, generatePDFBlob, getFilename]);
+
+  // Download PDF function
+  const generatePDF = useCallback(async () => {
+    if (disable) return;
+    setDisable(true);
+
+    try {
+      const blob = await generatePDFBlob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = getFilename();
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      alert("✅ Resume downloaded successfully!");
+    } catch (error) {
+      alert(`❌ Error: ${error.message}`);
+    } finally {
+      setDisable(false);
+    }
+  }, [disable, generatePDFBlob, getFilename]);
+
+  // Close preview and cleanup
+  const closePreview = useCallback(() => {
+    if (previewUrl) {
+      window.URL.revokeObjectURL(previewUrl);
+    }
+    setShowPreview(false);
+    setPreviewUrl(null);
+    setPreviewFilename("");
+  }, [previewUrl]);
+
+  // Download from preview
+  const downloadFromPreview = useCallback(() => {
+    if (!previewUrl) return;
+    const a = document.createElement("a");
+    a.href = previewUrl;
+    a.download = previewFilename;
+    a.click();
+  }, [previewUrl, previewFilename]);
 
   // Memoize handlers to prevent re-renders
   const handleProfileChange = useCallback((e) => setSelectedProfile(e.target.value), []);
+  const handleTemplateChange = useCallback((e) => setSelectedTemplate(e.target.value), []);
   const handleCompanyChange = useCallback((e) => setCompany(e.target.value), []);
   const handleRoleChange = useCallback((e) => setRole(e.target.value), []);
   const handleJdChange = useCallback((e) => setJd(e.target.value), []);
@@ -224,6 +275,23 @@ export default function Home() {
                 {profile.name}
               </option>
             ))}
+          </select>
+        </div>
+
+        {/* Template Selection */}
+        <div style={{ marginBottom: "30px" }}>
+          <label style={labelStyle}>
+            Resume Template
+          </label>
+          <select
+            value={selectedTemplate}
+            onChange={handleTemplateChange}
+            style={selectStyle}
+          >
+            <option value="default">Classic Professional (Default)</option>
+            <option value="modern">Modern Minimalist</option>
+            <option value="classic">Professional Two-Column</option>
+            <option value="contemporary">Contemporary with Color</option>
           </select>
         </div>
 
@@ -267,14 +335,28 @@ export default function Home() {
           />
         </div>
 
-        {/* Generate Button */}
-        <button
-          onClick={generatePDF}
-          disabled={disable}
-          style={buttonStyle}
-        >
-          {disable ? "⏳ Converting to PDF..." : "📄 Convert to PDF"}
-        </button>
+        {/* Action Buttons */}
+        <div style={{ display: "flex", gap: "12px", marginBottom: "20px" }}>
+          <button
+            onClick={previewPDF}
+            disabled={disable}
+            style={{
+              ...buttonStyle,
+              flex: 1,
+              background: disable ? "#ccc" : "linear-gradient(135deg, #48bb78 0%, #38a169 100%)",
+              boxShadow: disable ? "none" : "0 4px 15px rgba(72, 187, 120, 0.4)"
+            }}
+          >
+            {disable ? "⏳ Generating..." : "👁️ Preview PDF"}
+          </button>
+          <button
+            onClick={generatePDF}
+            disabled={disable}
+            style={buttonStyle}
+          >
+            {disable ? "⏳ Converting..." : "📥 Download PDF"}
+          </button>
+        </div>
 
         {/* Info Box */}
         <div style={infoBoxStyle}>
@@ -296,6 +378,113 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* Preview Modal */}
+      {showPreview && previewUrl && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            zIndex: 1000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px"
+          }}
+          onClick={closePreview}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: "12px",
+              width: "100%",
+              maxWidth: "900px",
+              maxHeight: "90vh",
+              display: "flex",
+              flexDirection: "column",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.5)"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                padding: "20px",
+                borderBottom: "1px solid #e0e0e0",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+              <h2 style={{ margin: 0, fontSize: "20px", color: "#333" }}>
+                📄 Resume Preview
+              </h2>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                  onClick={downloadFromPreview}
+                  style={{
+                    padding: "8px 16px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#fff",
+                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(102, 126, 234, 0.3)"
+                  }}
+                >
+                  📥 Download
+                </button>
+                <button
+                  onClick={closePreview}
+                  style={{
+                    padding: "8px 16px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#333",
+                    background: "#f0f0f0",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer"
+                  }}
+                >
+                  ✕ Close
+                </button>
+              </div>
+            </div>
+
+            {/* PDF Viewer */}
+            <div
+              style={{
+                flex: 1,
+                overflow: "auto",
+                padding: "20px",
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "#f5f5f5"
+              }}
+            >
+              <iframe
+                src={previewUrl}
+                style={{
+                  width: "100%",
+                  height: "70vh",
+                  border: "none",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                }}
+                title="Resume Preview"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

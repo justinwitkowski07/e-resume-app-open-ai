@@ -5,34 +5,54 @@ import fs from "fs";
 import path from "path";
 import Handlebars from "handlebars";
 
-// Cache template compilation
-let templateCache = null;
-let templatePath = null;
+// Cache template compilation - support multiple templates
+const templateCache = new Map();
+const TEMPLATE_OPTIONS = {
+  'default': 'Resume.html',
+  'modern': 'Resume_Modern.html',
+  'classic': 'Resume_Classic.html',
+  'contemporary': 'Resume_Contemporary.html'
+};
 
-const getTemplate = () => {
-  const currentTemplatePath = path.join(process.cwd(), "templates", "Resume.html");
-  
-  // Only recompile if template path changed or cache is empty
-  if (!templateCache || templatePath !== currentTemplatePath) {
-    templatePath = currentTemplatePath;
-    const templateSource = fs.readFileSync(templatePath, "utf-8");
-    
-    // Register Handlebars helpers (idempotent, safe to call multiple times)
-    Handlebars.registerHelper('formatKey', function(key) {
-      return key;
-    });
-    
-    Handlebars.registerHelper('join', function(array, separator) {
-      if (Array.isArray(array)) {
-        return array.join(separator);
-      }
-      return '';
-    });
-    
-    templateCache = Handlebars.compile(templateSource);
+// Register Handlebars helpers (idempotent, safe to call multiple times)
+Handlebars.registerHelper('formatKey', function(key) {
+  return key;
+});
+
+Handlebars.registerHelper('join', function(array, separator) {
+  if (Array.isArray(array)) {
+    return array.join(separator);
+  }
+  return '';
+});
+
+const getTemplate = (templateName = 'default') => {
+  // Validate template name
+  if (!TEMPLATE_OPTIONS[templateName]) {
+    templateName = 'default';
   }
   
-  return templateCache;
+  // Return cached template if available
+  if (templateCache.has(templateName)) {
+    return templateCache.get(templateName);
+  }
+  
+  // Load and compile template
+  const templateFile = TEMPLATE_OPTIONS[templateName];
+  const templatePath = path.join(process.cwd(), "templates", templateFile);
+  
+  if (!fs.existsSync(templatePath)) {
+    console.warn(`Template ${templateFile} not found, using default`);
+    return getTemplate('default');
+  }
+  
+  const templateSource = fs.readFileSync(templatePath, "utf-8");
+  const compiledTemplate = Handlebars.compile(templateSource);
+  
+  // Cache the compiled template
+  templateCache.set(templateName, compiledTemplate);
+  
+  return compiledTemplate;
 };
 
 // Cache profile data in memory to avoid repeated file reads
@@ -58,7 +78,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).send("Method not allowed");
 
   try {
-    const { profile, jd, company, role } = req.body;
+    const { profile, jd, company, role, template = 'default' } = req.body;
 
     if (!profile) return res.status(400).send("Profile required");
     if (!jd) return res.status(400).send("Completed resume JSON required");
@@ -137,7 +157,8 @@ export default async function handler(req, res) {
     });
 
     // Get cached template (compiled once, reused)
-    const template = getTemplate();
+    const compiledTemplate = getTemplate(template);
+    console.log(`Using template: ${template}`);
 
     // Prepare data for template
     const templateData = {
@@ -162,7 +183,7 @@ export default async function handler(req, res) {
     };
 
     // Render HTML
-    const html = template(templateData);
+    const html = compiledTemplate(templateData);
     console.log("HTML rendered from template");
 
     // Generate PDF with Puppeteer (optimized)
