@@ -100,7 +100,7 @@ const footerStyle = {
 export default function Home() {
   const [profiles, setProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState("");
-  const [selectedTemplate, setSelectedTemplate] = useState("default");
+  const [selectedTemplate, setSelectedTemplate] = useState("template1");
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [jd, setJd] = useState("");
@@ -288,12 +288,17 @@ export default function Home() {
             onChange={handleTemplateChange}
             style={selectStyle}
           >
-            <option value="default">Classic Professional (Default)</option>
-            <option value="modern">Modern Minimalist</option>
-            <option value="classic">Professional Two-Column</option>
-            <option value="contemporary">Contemporary with Color</option>
-            <option value="compact">Compact Single-Column</option>
-            <option value="elegant">Elegant Single-Column</option>
+            <option value="template1">Template 1: Clean Professional (Single-Column)</option>
+            <option value="template2">Template 2: Blue Gradient Header (Single-Column)</option>
+            <option value="template3">Template 3: Modern Minimalist (Single-Column)</option>
+            <option value="template4">Template 4: Compact Efficient (Single-Column)</option>
+            <option value="template5">Template 5: Elegant Serif (Single-Column)</option>
+            <option value="template6">Template 6: Purple Gradient (Single-Column)</option>
+            <option value="template7">Template 7: Classic Traditional (Single-Column)</option>
+            <option value="template8">Template 8: Ultra Minimal (Single-Column)</option>
+            <option value="template9">Template 9: Classic Two-Column</option>
+            <option value="template10">Template 10: Modern Two-Column</option>
+            <option value="template11">⭐ Template 11: Fantastic Premium Design (Single-Column)</option>
           </select>
         </div>
 

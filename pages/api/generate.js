@@ -8,12 +8,16 @@ import Handlebars from "handlebars";
 // Cache template compilation - support multiple templates
 const templateCache = new Map();
 const TEMPLATE_OPTIONS = {
-  'default': 'Resume.html',
-  'modern': 'Resume_Modern.html',
-  'classic': 'Resume_Classic.html',
-  'contemporary': 'Resume_Contemporary.html',
-  'compact': 'Resume_Compact.html',
-  'elegant': 'Resume_Elegant.html'
+  'template1': 'Resume_Template1.html',
+  'template2': 'Resume_Template2.html',
+  'template3': 'Resume_Template3.html',
+  'template4': 'Resume_Template4.html',
+  'template5': 'Resume_Template5.html',
+  'template6': 'Resume_Template6.html',
+  'template7': 'Resume_Template7.html',
+  'template8': 'Resume_Template8.html',
+  'template9': 'Resume_Template9.html',
+  'template10': 'Resume_Template10.html'
 };
 
 // Register Handlebars helpers (idempotent, safe to call multiple times)
@@ -28,10 +32,10 @@ Handlebars.registerHelper('join', function(array, separator) {
   return '';
 });
 
-const getTemplate = (templateName = 'default') => {
+const getTemplate = (templateName = 'template1') => {
   // Validate template name
   if (!TEMPLATE_OPTIONS[templateName]) {
-    templateName = 'default';
+    templateName = 'template1';
   }
   
   // Return cached template if available
@@ -44,8 +48,8 @@ const getTemplate = (templateName = 'default') => {
   const templatePath = path.join(process.cwd(), "templates", templateFile);
   
   if (!fs.existsSync(templatePath)) {
-    console.warn(`Template ${templateFile} not found, using default`);
-    return getTemplate('default');
+    console.warn(`Template ${templateFile} not found, using template1`);
+    return getTemplate('template1');
   }
   
   const templateSource = fs.readFileSync(templatePath, "utf-8");
