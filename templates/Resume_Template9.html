@@ -11,6 +11,7 @@
         box-sizing: border-box;
       }
 
+
       body {
         font-family: "Georgia", "Times New Roman", serif;
         font-size: 11pt;
@@ -19,20 +20,21 @@
         background: #ffffff;
         max-width: 8.5in;
         display: flex;
+        min-height: 11in;
       }
 
       .sidebar {
         width: 2.2in;
         background: #f5f5f5;
         padding: 0.6in 0.4in;
-        margin-top: -17mm;
+        min-height: 11in;
+        height: 100%;
         border-right: 1px solid #d0d0d0;
       }
 
       .main-content {
         flex: 1;
         padding: 0.6in 0.5in;
-        margin-top: -17mm;
       }
 
       header {
@@ -207,9 +209,12 @@
       @media print {
         body {
           padding: 0;
+          min-height: 11in;
         }
         .sidebar {
           padding: 0.6in 0.4in;
+          min-height: 11in;
+          height: 100%;
         }
         .main-content {
           padding: 0.6in 0.5in;
