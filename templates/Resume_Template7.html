@@ -5,6 +5,18 @@
     <title>{{name}} — Resume</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+      :root {
+        --primary: #0d9488;
+        --primary-dark: #0f766e;
+        --accent: #14b8a6;
+        --accent-light: #5eead4;
+        --text-dark: #0f172a;
+        --text-medium: #334155;
+        --text-light: #64748b;
+        --bg: #ffffff;
+        --code-bg: #f1f5f9;
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -12,141 +24,171 @@
       }
 
       body {
-        font-family: "Cambria", "Arial", sans-serif;
-        font-size: 11pt;
+        font-family: "Segoe UI", "Roboto", sans-serif;
+        font-size: 10.5pt;
         line-height: 1.4;
-        color: #000000;
-        background: #ffffff;
+        color: var(--text-dark);
+        background: var(--bg);
         max-width: 8.5in;
       }
 
+      /* Header */
       header {
-        text-align: center;
-        margin-bottom: 18px;
-        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-left: 4px solid var(--primary);
+        padding-left: 14px;
+        margin-bottom: 16px;
+        margin-top: -15mm;
       }
 
-      header h1 {
-        font-size: 30pt;
-        font-weight: bold;
+      .header-left h1 {
+        font-size: 26pt;
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: -0.5pt;
+        margin-bottom: 2px;
+      }
+
+      .header-left .title {
+        font-size: 12pt;
+        font-weight: 500;
+        color: var(--primary);
         margin-bottom: 4px;
-        color: #000000;
-        letter-spacing: 1pt;
-      }
-
-      header .title {
-        font-size: 15pt;
-        font-weight: normal;
-        margin-bottom: 6px;
-        color: #333333;
       }
 
       .contact {
-        font-size: 9.5pt;
-        color: #000000;
-        line-height: 1.4;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
+        text-align: right;
+        font-size: 9pt;
+        color: var(--text-medium);
+        line-height: 1.6;
       }
 
       .contact a {
-        color: #000000;
+        color: var(--primary);
         text-decoration: none;
       }
 
+      .contact div {
+        margin-bottom: 1px;
+      }
+
+      /* Section Headers */
       section {
-        margin-bottom: 22px;
+        margin-bottom: 14px;
       }
 
       section h2 {
-        font-size: 13pt;
-        font-weight: bold;
+        font-size: 11pt;
+        font-weight: 700;
         text-transform: uppercase;
-        color: #000000;
-        border-bottom: 1.5pt solid #000000;
-        padding-bottom: 2px;
-        margin-bottom: 8px;
+        color: var(--bg);
+        background: var(--primary);
+        padding: 4px 10px;
+        margin-bottom: 10px;
         letter-spacing: 1pt;
+        display: inline-block;
       }
 
+      /* Summary */
       .summary {
         font-size: 10pt;
-        line-height: 1.4;
-        text-align: left;
-        color: #000000;
+        line-height: 1.55;
+        color: var(--text-medium);
+        padding: 8px 12px;
+        background: var(--code-bg);
+        border-left: 3px solid var(--accent);
+      }
+
+      /* Skills */
+      .skills-grid {
+        display: grid;
+        gap: 6px;
       }
 
       .skills-category {
-        margin-bottom: 6px;
-        line-height: 1.4;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
       }
 
       .skills-category strong {
         font-size: 10pt;
-        font-weight: bold;
-        color: #000000;
-        display: inline-block;
-        min-width: 110px;
-        margin-right: 6px;
+        font-weight: 600;
+        color: var(--primary-dark);
+        min-width: 130px;
       }
 
       .skills-list {
-        font-size: 10pt;
-        color: #000000;
+        font-size: 9.5pt;
+        color: var(--text-dark);
+        background: var(--code-bg);
+        padding: 2px 8px;
+        border-radius: 2px;
+        flex: 1;
       }
 
+      /* Experience */
       .exp-item {
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         page-break-inside: avoid;
+        padding-left: 12px;
+        border-left: 2px solid var(--accent-light);
       }
 
       .exp-header {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-        margin-top: 12px;
-        margin-bottom: 2px;
+        margin-bottom: 1px;
       }
 
       .exp-title {
         font-size: 11pt;
-        font-weight: bold;
-        color: #000000;
+        font-weight: 700;
+        color: var(--text-dark);
       }
 
       .exp-dates {
-        font-size: 9.5pt;
-        color: #000000;
-        font-weight: normal;
-        white-space: nowrap;
-        margin-left: 10px;
+        font-size: 9pt;
+        color: var(--primary);
+        font-weight: 600;
+        font-family: "Consolas", monospace;
       }
 
       .exp-company {
         font-size: 10pt;
-        font-style: italic;
-        margin-bottom: 3px;
-        color: #333333;
+        color: var(--text-medium);
+        margin-bottom: 4px;
+      }
+
+      .exp-company strong {
+        font-weight: 600;
+        color: var(--text-dark);
       }
 
       .exp-details {
-        margin-left: 18px;
-        margin-top: 3px;
+        margin-left: 14px;
         padding-left: 0;
       }
 
       .exp-details li {
         font-size: 10pt;
-        line-height: 1.35;
+        line-height: 1.45;
         margin-bottom: 2px;
-        text-align: left;
-        color: #000000;
+        color: var(--text-dark);
       }
 
+      .exp-details li::marker {
+        color: var(--accent);
+      }
+
+      /* Education */
       .edu-item {
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+        padding-left: 12px;
+        border-left: 2px solid var(--accent-light);
       }
 
       .edu-header {
@@ -157,28 +199,25 @@
 
       .edu-degree {
         font-size: 10.5pt;
-        font-weight: bold;
-        color: #000000;
+        font-weight: 600;
+        color: var(--text-dark);
       }
 
       .edu-dates {
-        font-size: 9.5pt;
-        color: #000000;
-        white-space: nowrap;
+        font-size: 9pt;
+        color: var(--primary);
+        font-family: "Consolas", monospace;
       }
 
       .edu-school {
         font-size: 10pt;
-        color: #333333;
-        font-style: italic;
+        color: var(--text-medium);
       }
 
+      /* Print */
       @media print {
         body {
-          padding: 0.6in 0.7in;
-        }
-        header {
-          margin-top: 0;
+          padding: 0.5in 0.6in;
         }
       }
 
@@ -190,13 +229,15 @@
 
   <body>
     <header>
-      <h1>{{name}}</h1>
-      <div class="title">{{title}}</div>
+      <div class="header-left">
+        <h1>{{name}}</h1>
+        <div class="title">{{title}}</div>
+      </div>
       <div class="contact">
-        {{#if phone}}<span>{{phone}}</span>{{/if}}
-        <span><a href="mailto:{{email}}">{{email}}</a></span>
-        {{#if linkedin}}<span><a href="{{linkedin}}">{{linkedin}}</a></span>{{/if}}
-        <span>{{location}}</span>
+        <div><a href="mailto:{{email}}">{{email}}</a></div>
+        {{#if phone}}<div>{{phone}}</div>{{/if}}
+        <div>{{location}}</div>
+        {{#if linkedin}}<div><a href="{{linkedin}}">{{linkedin}}</a></div>{{/if}}
       </div>
     </header>
 
@@ -205,17 +246,23 @@
       <h2>Summary</h2>
       <p class="summary">{{summary}}</p>
     </section>
-    {{/if}} {{#if skills}}
+    {{/if}}
+
+    {{#if skills}}
     <section>
       <h2>Technical Skills</h2>
-      {{#each skills}}
-      <div class="skills-category">
-        <strong>{{formatKey @key}}:</strong>
-        <span class="skills-list">{{join this ", "}}</span>
+      <div class="skills-grid">
+        {{#each skills}}
+        <div class="skills-category">
+          <strong>{{formatKey @key}}:</strong>
+          <span class="skills-list">{{join this ", "}}</span>
+        </div>
+        {{/each}}
       </div>
-      {{/each}}
     </section>
-    {{/if}} {{#if experience}}
+    {{/if}}
+
+    {{#if experience}}
     <section>
       <h2>Experience</h2>
       {{#each experience}}
@@ -225,7 +272,7 @@
           <div class="exp-dates">{{start_date}} – {{end_date}}</div>
         </div>
         <div class="exp-company">
-          {{company}}{{#if location}} - {{location}}{{/if}}
+          <strong>{{company}}</strong>{{#if location}}, {{location}}{{/if}}
         </div>
         {{#if details}}
         <ul class="exp-details">
@@ -237,7 +284,9 @@
       </div>
       {{/each}}
     </section>
-    {{/if}} {{#if education}}
+    {{/if}}
+
+    {{#if education}}
     <section>
       <h2>Education</h2>
       {{#each education}}
