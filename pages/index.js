@@ -288,17 +288,16 @@ export default function Home() {
             onChange={handleTemplateChange}
             style={selectStyle}
           >
-            <option value="template1">Template 1: Clean Professional (Single-Column)</option>
-            <option value="template2">Template 2: Blue Gradient Header (Single-Column)</option>
-            <option value="template3">Template 3: Modern Minimalist (Single-Column)</option>
-            <option value="template4">Template 4: Compact Efficient (Single-Column)</option>
-            <option value="template5">Template 5: Elegant Serif (Single-Column)</option>
-            <option value="template6">Template 6: Purple Gradient (Single-Column)</option>
-            <option value="template7">Template 7: Classic Traditional (Single-Column)</option>
-            <option value="template8">Template 8: Ultra Minimal (Single-Column)</option>
-            <option value="template9">Template 9: Classic Two-Column</option>
-            <option value="template10">Template 10: Modern Two-Column</option>
-            <option value="template11">⭐ Template 11: Fantastic Premium Design (Single-Column)</option>
+            <option value="template1">Template 1: Blue Accent Professional (Single-Column)</option>
+            <option value="template2">Template 2: Blue Gradient Header with Boxes (Single-Column)</option>
+            <option value="template3">Template 3: Compact Minimalist Dark Theme (Single-Column)</option>
+            <option value="template4">Template 4: Classic Black Borders (Single-Column)</option>
+            <option value="template5">Template 5: Purple Gradient Header (Single-Column)</option>
+            <option value="template6">Template 6: Teal Tech Style (Single-Column)</option>
+            <option value="template7">Template 7: Ultra Minimal Light (Single-Column)</option>
+            <option value="template8">Template 8: Blue Gradient Sidebar (Two-Column)</option>
+            <option value="template9">Template 9: Classic Serif Sidebar (Two-Column)</option>
+            <option value="template10">Template 10: Green Theme Professional (Single-Column)</option>
           </select>
         </div>
 
